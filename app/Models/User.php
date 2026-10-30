@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\FireReport;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
@@ -28,5 +30,15 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function reports(): HasMany
+    {
+        return $this->hasMany(FireReport::class);
+    }
+
+    public function reviewedReports(): HasMany
+    {
+        return $this->hasMany(FireReport::class, 'reviewer_id');
     }
 }
