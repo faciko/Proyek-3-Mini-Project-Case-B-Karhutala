@@ -6,6 +6,7 @@ use App\Http\Requests\StoreFireReportRequest;
 use App\Http\Requests\UpdateFireReportRequest;
 use App\Models\Area;
 use App\Models\FireReport;
+use App\Services\ReportWorkflowService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -66,13 +67,20 @@ class FireReportController extends Controller
     /**
      * Detail satu laporan. Route model binding mengubah {report} menjadi model.
      */
-    public function show(FireReport $report): View
-    {
+    public function show(
+        FireReport $report,
+        ReportWorkflowService $workflow
+    ): View {
         $this->authorize('view', $report);
 
         $report->load(['area', 'reporter', 'reviewer']);
 
-        return view('reports.show', compact('report'));
+        $allowedTransitions = $workflow->allowedTransitions(
+            $report,
+            auth()->user()
+        );
+
+        return view('reports.show', compact('report', 'allowedTransitions'));
     }
 
     /**

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\FireReportController;
+use App\Http\Controllers\FireReportStatusController;
 use App\Http\Controllers\LoginController;
 use Illuminate\Support\Facades\Route;
 
@@ -29,6 +30,10 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('reports', FireReportController::class)
         ->only(['index', 'create', 'store', 'show', 'edit', 'update']);
+
+    Route::patch('/reports/{report}/status', [
+        FireReportStatusController::class, 'update',
+    ])->name('reports.status');
 });
 
 /*

@@ -177,6 +177,8 @@
         .evidence { margin-top: 15px; padding-top: 15px; border-top: 1px solid #EDF1F3; font-size: 13px; }
         .note-box { margin-top: 15px; padding: 12px 14px; border-radius: 6px; background: #F8FAFB; font-size: 13px; line-height: 1.6; }
         .note-box strong { display: block; margin-bottom: 4px; color: #1F2933; }
+        .workflow { max-width: 760px; margin-top: 18px; }
+        .workflow .field textarea { min-height: 90px; }
         @media (max-width: 720px) {
             .account span { display: none; }
             .grid-2, .detail-grid { grid-template-columns: 1fr; }

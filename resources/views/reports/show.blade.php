@@ -2,6 +2,19 @@
 
 @section('title', $report->title . ' - Karhutla Community')
 
+@php
+    $statusLabels = [
+        'submitted' => 'Menunggu ditinjau',
+        'under_review' => 'Sedang ditinjau',
+        'needs_attention' => 'Perlu perhatian',
+        'ready_to_forward' => 'Siap diteruskan',
+        'forwarded' => 'Sudah diteruskan',
+        'closed' => 'Selesai',
+    ];
+    $statusLabel = $statusLabels[$report->status]
+        ?? ucfirst(str_replace('_', ' ', $report->status));
+@endphp
+
 @section('content')
     <div class="page-head">
         <div>
@@ -15,7 +28,7 @@
 
         <div>
             <span class="status status-{{ $report->status }}">
-                {{ ucfirst(str_replace('_', ' ', $report->status)) }}
+                {{ $statusLabel }}
             </span>
 
             @can('update', $report)
@@ -78,4 +91,60 @@
             @endif
         </section>
     </div>
+
+    @if (in_array(auth()->user()->role, ['monitor', 'coordinator'], true))
+        <section class="card workflow">
+            <h2>Ubah status</h2>
+
+            @if ($allowedTransitions === [])
+                <p class="subtitle">
+                    Tidak ada transisi status yang tersedia untuk akun ini pada status
+                    <strong>{{ $statusLabel }}</strong>.
+                </p>
+            @else
+                <p class="subtitle">
+                    Pilih status berikutnya. Aturan transisi dan role tetap diperiksa di server.
+                </p>
+
+                <form method="POST" action="{{ route('reports.status', $report) }}">
+                    @csrf
+                    @method('PATCH')
+
+                    <div class="field">
+                        <label for="status">Status berikutnya</label>
+                        <select id="status" name="status" required>
+                            <option value="">Pilih status</option>
+                            @foreach ($allowedTransitions as $nextStatus)
+                                <option value="{{ $nextStatus }}"
+                                    @selected(old('status') === $nextStatus)>
+                                    {{ $statusLabels[$nextStatus] ?? ucfirst(str_replace('_', ' ', $nextStatus)) }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('status') <span class="error">{{ $message }}</span> @enderror
+                    </div>
+
+                    <div class="field">
+                        <label for="note">Catatan review (opsional)</label>
+                        <textarea id="note" name="note" maxlength="2000">{{ old('note', $report->review_note) }}</textarea>
+                        @error('note') <span class="error">{{ $message }}</span> @enderror
+                    </div>
+
+                    @if (in_array('forwarded', $allowedTransitions, true))
+                        <div class="field">
+                            <label for="forwarded_to">Diteruskan ke</label>
+                            <input id="forwarded_to" type="text" name="forwarded_to" maxlength="160"
+                                   value="{{ old('forwarded_to', $report->forwarded_to) }}"
+                                   placeholder="Contoh: BPBD Kabupaten">
+                            @error('forwarded_to') <span class="error">{{ $message }}</span> @enderror
+                        </div>
+                    @endif
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn">Simpan status</button>
+                    </div>
+                </form>
+            @endif
+        </section>
+    @endif
 @endsection
