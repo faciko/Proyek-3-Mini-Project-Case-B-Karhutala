@@ -15,6 +15,11 @@ use Illuminate\View\View;
 class FireReportController extends Controller
 {
     /**
+     * Bukti disimpan di disk privat, lalu disajikan lewat route ber-authorization.
+     */
+    private const EVIDENCE_DISK = 'local';
+
+    /**
      * Daftar laporan. Pelapor hanya melihat laporan miliknya.
      */
     public function index(Request $request): View
@@ -55,7 +60,7 @@ class FireReportController extends Controller
         unset($data['evidence']);
 
         if ($evidence) {
-            $data['evidence_path'] = $evidence->store('report-evidence', 'public');
+            $data['evidence_path'] = $evidence->store('report-evidence', self::EVIDENCE_DISK);
         }
 
         $request->user()->reports()->create($data);
@@ -111,13 +116,13 @@ class FireReportController extends Controller
         $oldPath = $report->evidence_path;
 
         if ($evidence) {
-            $data['evidence_path'] = $evidence->store('report-evidence', 'public');
+            $data['evidence_path'] = $evidence->store('report-evidence', self::EVIDENCE_DISK);
         }
 
         $report->update($data);
 
         if ($evidence && $oldPath) {
-            Storage::disk('public')->delete($oldPath);
+            Storage::disk(self::EVIDENCE_DISK)->delete($oldPath);
         }
 
         return to_route('reports.show', $report)

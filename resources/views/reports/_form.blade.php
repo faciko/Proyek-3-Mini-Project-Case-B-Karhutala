@@ -83,7 +83,7 @@
         @if ($isEdit && $report->evidence_path)
             <p class="hint">
                 Bukti saat ini:
-                <a href="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($report->evidence_path) }}"
+                <a href="{{ route('reports.evidence', $report) }}"
                    target="_blank" rel="noopener">lihat file</a>.
                 Biarkan input kosong jika tidak ingin mengganti bukti.
             </p>

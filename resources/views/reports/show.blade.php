@@ -71,7 +71,7 @@
             @if ($report->evidence_path)
                 <div class="evidence">
                     <strong>Bukti:</strong>
-                    <a href="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($report->evidence_path) }}"
+                    <a href="{{ route('reports.evidence', $report) }}"
                        target="_blank" rel="noopener">Lihat file bukti</a>
                 </div>
             @endif
