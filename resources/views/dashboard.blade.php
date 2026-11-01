@@ -101,16 +101,18 @@
                 <article class="card">
                     <h2>Laporan saya</h2>
                     <p>Buat laporan indikasi kebakaran dan pantau status laporan milikmu.</p>
+                    <a href="{{ route('reports.index') }}">Lihat laporan saya &rarr;</a>
                 </article>
                 <article class="card">
                     <h2>Hak akses</h2>
                     <p>Pelapor hanya bisa melihat dan mengubah laporan miliknya sendiri saat status masih <strong>submitted</strong>.</p>
+                    <a href="{{ route('reports.create') }}">Buat laporan baru &rarr;</a>
                 </article>
             @else
                 <article class="card">
                     <h2>Tinjau laporan</h2>
                     <p>Relawan dan koordinator dapat melihat laporan dari semua pelapor.</p>
-                    <a href="{{ route('review') }}">Buka halaman review &rarr;</a>
+                    <a href="{{ route('reports.index') }}">Lihat semua laporan &rarr;</a>
                 </article>
                 <article class="card">
                     <h2>Hak akses</h2>

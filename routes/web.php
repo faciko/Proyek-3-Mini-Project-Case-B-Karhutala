@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\FireReportController;
 use App\Http\Controllers\LoginController;
 use Illuminate\Support\Facades\Route;
 
@@ -25,6 +26,9 @@ Route::middleware('auth')->group(function () {
         ->name('logout');
 
     Route::view('/dashboard', 'dashboard')->name('dashboard');
+
+    Route::resource('reports', FireReportController::class)
+        ->only(['index', 'create', 'store', 'show', 'edit', 'update']);
 });
 
 /*
