@@ -9,17 +9,12 @@ use Illuminate\View\View;
 
 class LoginController extends Controller
 {
-    /**
-     * Tampilkan halaman form login.
-     */
+
     public function create(): View
     {
         return view('auth.login');
     }
 
-    /**
-     * Proses percobaan login.
-     */
     public function store(Request $request): RedirectResponse
     {
         $credentials = $request->validate([
@@ -38,9 +33,6 @@ class LoginController extends Controller
         ])->onlyInput('email');
     }
 
-    /**
-     * Logout dan akhiri session.
-     */
     public function destroy(Request $request): RedirectResponse
     {
         Auth::logout();

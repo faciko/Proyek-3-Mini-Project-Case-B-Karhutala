@@ -7,11 +7,7 @@ use Illuminate\Validation\Rule;
 
 class UpdateFireReportRequest extends FormRequest
 {
-    /**
-     * Aturan validasi input update laporan.
-     *
-     * Authorization update dilakukan oleh FireReportPolicy di controller.
-     */
+
     public function rules(): array
     {
         return [

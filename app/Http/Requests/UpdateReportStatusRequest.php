@@ -7,11 +7,7 @@ use Illuminate\Validation\Rule;
 
 class UpdateReportStatusRequest extends FormRequest
 {
-    /**
-     * Aturan validasi input perubahan status.
-     *
-     * Aturan transisi dan role diperiksa ReportWorkflowService.
-     */
+
     public function rules(): array
     {
         return [

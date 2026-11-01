@@ -9,9 +9,7 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class FireReportEvidenceController extends Controller
 {
-    /**
-     * Sajikan file bukti hanya untuk pengguna yang boleh melihat laporan.
-     */
+
     public function __invoke(FireReport $report): StreamedResponse
     {
         $this->authorize('view', $report);

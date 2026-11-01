@@ -179,9 +179,26 @@
         .note-box strong { display: block; margin-bottom: 4px; color: #1F2933; }
         .workflow { max-width: 760px; margin-top: 18px; }
         .workflow .field textarea { min-height: 90px; }
+        .area-summary-card { margin-bottom: 18px; }
+        .area-summary-field { max-width: 420px; margin-bottom: 0; }
+        .summary-output { min-height: 20px; margin: 10px 0 0; color: #147E7A; font-size: 13px; font-weight: bold; }
+        .filter-card { margin-bottom: 18px; }
+        .filter-grid {
+            display: grid;
+            grid-template-columns: minmax(190px, 1.4fr) minmax(150px, .9fr) minmax(160px, .9fr) auto;
+            gap: 14px;
+            align-items: end;
+        }
+        .filter-actions { display: flex; align-items: center; gap: 8px; }
+        .result-count { margin: 0 0 10px; color: #5F6B73; font-size: 13px; }
+        @media (max-width: 900px) {
+            .filter-grid { grid-template-columns: 1fr 1fr; }
+            .filter-actions { grid-column: 1 / -1; }
+        }
         @media (max-width: 720px) {
             .account span { display: none; }
             .grid-2, .detail-grid { grid-template-columns: 1fr; }
+            .filter-grid { grid-template-columns: 1fr; }
             h1 { font-size: 22px; }
         }
     </style>
@@ -214,5 +231,7 @@
 
         @yield('content')
     </main>
+
+    @stack('scripts')
 </body>
 </html>

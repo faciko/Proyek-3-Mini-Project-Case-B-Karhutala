@@ -8,9 +8,7 @@ use Illuminate\Validation\ValidationException;
 
 class ReportWorkflowService
 {
-    /**
-     * Peta transisi status yang diizinkan.
-     */
+
     private const TRANSITIONS = [
         'submitted' => ['under_review'],
         'under_review' => ['needs_attention', 'ready_to_forward'],
@@ -20,9 +18,6 @@ class ReportWorkflowService
         'closed' => [],
     ];
 
-    /**
-     * Jalankan transisi status setelah memeriksa aturan bisnis dan role.
-     */
     public function transition(
         FireReport $report,
         User $actor,
@@ -51,9 +46,6 @@ class ReportWorkflowService
         $report->save();
     }
 
-    /**
-     * Transisi yang boleh dipilih aktor pada UI.
-     */
     public function allowedTransitions(FireReport $report, User $actor): array
     {
         $allowed = self::TRANSITIONS[$report->status] ?? [];
@@ -64,9 +56,6 @@ class ReportWorkflowService
         ));
     }
 
-    /**
-     * Monitor menangani transisi review; koordinator menangani penerusan.
-     */
     private function actorCanPerform(string $next, User $actor): bool
     {
         $monitorAction = in_array($next, [

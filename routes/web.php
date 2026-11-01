@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AreaSummaryController;
 use App\Http\Controllers\FireReportController;
 use App\Http\Controllers\FireReportEvidenceController;
 use App\Http\Controllers\FireReportStatusController;
@@ -35,18 +36,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/reports/{report}/evidence', FireReportEvidenceController::class)
         ->name('reports.evidence');
 
+    Route::get('/areas/{area}/summary', AreaSummaryController::class)
+        ->name('areas.summary');
+
     Route::patch('/reports/{report}/status', [
         FireReportStatusController::class, 'update',
     ])->name('reports.status');
 });
 
-/*
-|--------------------------------------------------------------------------
-| Contoh route dengan role middleware
-|--------------------------------------------------------------------------
-| Route di bawah siap dipakai saat halaman review/rekap dibuat pada
-| bagian berikutnya. Hapus atau sesuaikan jika belum dibutuhkan.
-*/
 Route::middleware(['auth', 'role:monitor,coordinator'])
     ->get('/review', function () {
         return 'Halaman ini hanya untuk monitor dan koordinator.';

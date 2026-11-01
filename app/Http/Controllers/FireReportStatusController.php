@@ -9,9 +9,7 @@ use Illuminate\Http\RedirectResponse;
 
 class FireReportStatusController extends Controller
 {
-    /**
-     * Ubah status laporan melalui service workflow.
-     */
+
     public function update(
         UpdateReportStatusRequest $request,
         FireReport $report,

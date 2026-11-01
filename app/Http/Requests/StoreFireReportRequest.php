@@ -7,17 +7,12 @@ use Illuminate\Validation\Rule;
 
 class StoreFireReportRequest extends FormRequest
 {
-    /**
-     * Hanya pelapor yang boleh membuat laporan.
-     */
+
     public function authorize(): bool
     {
         return $this->user()?->role === 'reporter';
     }
 
-    /**
-     * Aturan validasi input pembuatan laporan.
-     */
     public function rules(): array
     {
         return [

@@ -10,34 +10,53 @@ use App\Services\ReportWorkflowService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class FireReportController extends Controller
 {
-    /**
-     * Bukti disimpan di disk privat, lalu disajikan lewat route ber-authorization.
-     */
+
     private const EVIDENCE_DISK = 'local';
 
-    /**
-     * Daftar laporan. Pelapor hanya melihat laporan miliknya.
-     */
     public function index(Request $request): View
     {
+        $statuses = [
+            'submitted' => 'Menunggu ditinjau',
+            'under_review' => 'Sedang ditinjau',
+            'needs_attention' => 'Perlu perhatian',
+            'ready_to_forward' => 'Siap diteruskan',
+            'forwarded' => 'Sudah diteruskan',
+            'closed' => 'Selesai',
+        ];
+
+        $data = $request->validate([
+            'area_id' => ['nullable', 'integer', 'exists:areas,id'],
+            'status' => ['nullable', Rule::in(array_keys($statuses))],
+            'q' => ['nullable', 'string', 'max:100'],
+        ]);
+
         $query = FireReport::query()->with(['area', 'reporter']);
 
         if ($request->user()->role === 'reporter') {
             $query->where('user_id', $request->user()->id);
         }
 
-        $reports = $query->latest()->paginate(10);
+        $reports = $query
+            ->when($data['area_id'] ?? null, fn ($q, $id) =>
+                $q->where('area_id', $id))
+            ->when($data['status'] ?? null, fn ($q, $status) =>
+                $q->where('status', $status))
+            ->when($data['q'] ?? null, fn ($q, $term) =>
+                $q->where('title', 'like', '%' . $term . '%'))
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
 
-        return view('reports.index', compact('reports'));
+        $areas = Area::orderBy('name')->get();
+
+        return view('reports.index', compact('reports', 'areas', 'statuses'));
     }
 
-    /**
-     * Tampilkan form pembuatan laporan.
-     */
     public function create(): View
     {
         abort_unless(auth()->user()->role === 'reporter', 403);
@@ -50,9 +69,6 @@ class FireReportController extends Controller
         ]);
     }
 
-    /**
-     * Simpan laporan baru milik user yang sedang login.
-     */
     public function store(StoreFireReportRequest $request): RedirectResponse
     {
         $data = $request->validated();
@@ -69,9 +85,6 @@ class FireReportController extends Controller
             ->with('status', 'Laporan berhasil dibuat.');
     }
 
-    /**
-     * Detail satu laporan. Route model binding mengubah {report} menjadi model.
-     */
     public function show(
         FireReport $report,
         ReportWorkflowService $workflow
@@ -88,9 +101,6 @@ class FireReportController extends Controller
         return view('reports.show', compact('report', 'allowedTransitions'));
     }
 
-    /**
-     * Tampilkan form edit laporan.
-     */
     public function edit(FireReport $report): View
     {
         $this->authorize('update', $report);
@@ -100,9 +110,6 @@ class FireReportController extends Controller
         return view('reports.edit', compact('areas', 'report'));
     }
 
-    /**
-     * Perbarui laporan milik pelapor.
-     */
     public function update(
         UpdateFireReportRequest $request,
         FireReport $report

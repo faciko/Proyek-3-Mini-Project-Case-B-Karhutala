@@ -8,11 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class RoleMiddleware
 {
-    /**
-     * Batasi akses berdasarkan satu atau lebih role.
-     *
-     * Contoh pemakaian pada route: role:monitor,coordinator
-     */
+
     public function handle(
         Request $request, Closure $next, string ...$roles
     ): Response {
