@@ -5,6 +5,7 @@ use App\Http\Controllers\FireReportController;
 use App\Http\Controllers\FireReportEvidenceController;
 use App\Http\Controllers\FireReportStatusController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\ReportDashboardController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -29,6 +30,10 @@ Route::middleware('auth')->group(function () {
         ->name('logout');
 
     Route::view('/dashboard', 'dashboard')->name('dashboard');
+
+    Route::get('/recap', ReportDashboardController::class)
+        ->middleware('role:monitor,coordinator')
+        ->name('reports.recap');
 
     Route::resource('reports', FireReportController::class)
         ->only(['index', 'create', 'store', 'show', 'edit', 'update']);

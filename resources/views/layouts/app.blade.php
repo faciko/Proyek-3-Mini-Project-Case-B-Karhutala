@@ -191,6 +191,26 @@
         }
         .filter-actions { display: flex; align-items: center; gap: 8px; }
         .result-count { margin: 0 0 10px; color: #5F6B73; font-size: 13px; }
+        .recap-filter { margin-bottom: 18px; }
+        .recap-filter-row { display: flex; align-items: end; gap: 14px; flex-wrap: wrap; }
+        .recap-filter-row .field { min-width: 240px; margin-bottom: 0; }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 14px;
+            margin-bottom: 18px;
+        }
+        .stat-card {
+            padding: 20px;
+            border-radius: 10px;
+            background: #fff;
+            border-top: 4px solid #147E7A;
+            box-shadow: 0 8px 24px rgba(31, 41, 51, .06);
+        }
+        .stat-card.stat-active { border-top-color: #D9A441; }
+        .stat-card.stat-closed { border-top-color: #5B6B75; }
+        .stat-label { display: block; color: #5F6B73; font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }
+        .stat-value { display: block; margin-top: 8px; color: #1F2933; font-size: 32px; line-height: 1; }
         @media (max-width: 900px) {
             .filter-grid { grid-template-columns: 1fr 1fr; }
             .filter-actions { grid-column: 1 / -1; }
@@ -199,6 +219,7 @@
             .account span { display: none; }
             .grid-2, .detail-grid { grid-template-columns: 1fr; }
             .filter-grid { grid-template-columns: 1fr; }
+            .stats-grid { grid-template-columns: 1fr; }
             h1 { font-size: 22px; }
         }
     </style>
@@ -210,6 +231,9 @@
         <nav class="nav" aria-label="Navigasi utama">
             <a href="{{ route('dashboard') }}">Dashboard</a>
             <a href="{{ route('reports.index') }}">Laporan</a>
+            @if (in_array($currentUser->role, ['monitor', 'coordinator'], true))
+                <a href="{{ route('reports.recap') }}">Rekap</a>
+            @endif
             @if ($currentUser->role === 'reporter')
                 <a href="{{ route('reports.create') }}">Buat laporan</a>
             @endif

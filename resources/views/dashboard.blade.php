@@ -115,6 +115,11 @@
                     <a href="{{ route('reports.index') }}">Lihat semua laporan &rarr;</a>
                 </article>
                 <article class="card">
+                    <h2>Rekap laporan</h2>
+                    <p>Lihat total laporan, laporan aktif, laporan selesai, dan tabel per wilayah.</p>
+                    <a href="{{ route('reports.recap') }}">Buka rekap &rarr;</a>
+                </article>
+                <article class="card">
                     <h2>Hak akses</h2>
                     <p>Halaman review dijaga middleware <code>role:monitor,coordinator</code>, sehingga akun pelapor akan mendapat respons 403.</p>
                 </article>
